@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mindful Fertility — Female Health History</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Nunito:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap');
+  :root{--purple:#3D1F6E;--pink:#E0457B;--blush:#FCF0F5;--blush-mid:#F5E2EE;--white:#FFFFFF;--body:#4A4A4A;--muted:#9A8FA0;--border:#E8C8D8;--radius:14px;--radius-sm:8px}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'Nunito',sans-serif;font-weight:400;background:#FAF4F8;color:var(--body);font-size:16px;line-height:1.6;min-height:100vh}
+  #progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--pink),var(--purple));width:0%;transition:width 0.4s ease;z-index:100}
+  .site-header{background:var(--white);border-bottom:1px solid var(--border);padding:16px 24px;text-align:center;position:sticky;top:0;z-index:50}
+  .brand{font-family:'DM Serif Display',serif;font-size:1.2rem;color:var(--purple)}.brand span{color:var(--pink);font-style:italic}
+  .badge{display:inline-block;margin-top:6px;background:var(--blush-mid);color:var(--pink);font-size:0.75rem;font-weight:600;padding:3px 12px;border-radius:20px;letter-spacing:0.04em}
+  .wrapper{max-width:640px;margin:0 auto;padding:0 20px 80px}
+  .hero{padding:40px 0 24px;text-align:center}
+  .hero h1{font-family:'DM Serif Display',serif;font-size:2rem;color:var(--purple);line-height:1.2;margin-bottom:8px}
+  .hero .tagline{font-family:'DM Serif Display',serif;font-style:italic;font-size:1.1rem;color:var(--pink)}
+  .letter{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:28px;margin-bottom:32px;position:relative;overflow:hidden}
+  .letter::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:linear-gradient(180deg,var(--pink),var(--purple))}
+  .letter .salutation{font-family:'DM Serif Display',serif;font-size:1.1rem;color:var(--purple);margin-bottom:12px}
+  .letter p{font-size:0.93rem;color:var(--body);margin-bottom:10px;line-height:1.7}
+  .letter .sign{font-family:'DM Serif Display',serif;color:var(--purple);font-size:0.95rem;margin-top:16px}
+  .reminder-box{background:linear-gradient(135deg,#FFF0F6,#F5E2EE);border:2px solid var(--pink);border-radius:var(--radius);padding:20px 24px;margin-bottom:28px;text-align:center}
+  .reminder-box h3{font-family:'DM Serif Display',serif;font-size:1.1rem;color:var(--purple);margin-bottom:10px}
+  .reminder-box p{font-size:0.88rem;color:var(--body);line-height:1.7;margin-bottom:6px}
+  .reminder-box .email{font-weight:700;color:var(--pink);font-size:0.95rem}
+  .reminder-box .deadline{font-weight:700;color:var(--purple)}
+  .section{margin-bottom:28px;background:var(--white);border-radius:var(--radius);border:1px solid var(--border);overflow:hidden}
+  .section-header{background:var(--blush-mid);padding:14px 20px;display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
+  .section-num{width:30px;height:30px;background:var(--pink);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:600;color:var(--white);flex-shrink:0}
+  .section-title{font-family:'DM Serif Display',serif;font-size:1.05rem;color:var(--purple);flex:1}
+  .section-chevron{color:var(--pink);font-size:1rem;transition:transform 0.3s;flex-shrink:0}
+  .section-chevron.open{transform:rotate(180deg)}
+  .section-body{padding:20px;display:flex;flex-direction:column;gap:20px}
+  .q-block{display:flex;flex-direction:column;gap:7px}
+  .q-label{font-size:0.88rem;font-weight:600;color:var(--purple);line-height:1.4}
+  .q-hint{font-size:0.78rem;color:var(--muted);font-style:italic;margin-top:-3px}
+  input[type=text],input[type=number],textarea{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'Nunito',sans-serif;font-size:0.88rem;color:var(--body);background:var(--blush);outline:none;transition:border-color 0.2s,box-shadow 0.2s;-webkit-appearance:none}
+  input:focus,textarea:focus{border-color:var(--pink);box-shadow:0 0 0 3px rgba(224,69,123,0.1);background:var(--white)}
+  textarea{resize:vertical;min-height:85px;line-height:1.6}
+  .inline-field{display:flex;align-items:center;gap:10px}
+  .inline-field input{width:80px;text-align:center}
+  .unit{font-size:0.82rem;color:var(--muted);white-space:nowrap}
+  .options-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .options-grid.cols-1{grid-template-columns:1fr}
+  .options-grid.cols-3{grid-template-columns:1fr 1fr 1fr}
+  .pill input{display:none}
+  .pill label{display:flex;align-items:center;gap:8px;padding:10px 12px;border:1.5px solid var(--border);border-radius:50px;cursor:pointer;font-size:0.83rem;color:var(--body);background:var(--blush);transition:all 0.18s;line-height:1.3;-webkit-tap-highlight-color:transparent}
+  .pill label::before{content:'';width:16px;height:16px;border:2px solid var(--border);border-radius:50%;flex-shrink:0;background:var(--white);transition:all 0.18s}
+  .pill input:checked+label{border-color:var(--pink);background:linear-gradient(135deg,#FFF0F6,#F8E0EE);color:var(--purple);font-weight:600}
+  .pill input:checked+label::before{background:var(--pink);border-color:var(--pink);box-shadow:inset 0 0 0 3px white}
+  .pill.multi label::before{border-radius:4px}
+  .callout{background:var(--blush);border-left:4px solid var(--pink);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:14px 16px;font-family:'DM Serif Display',serif;font-style:italic;font-size:0.95rem;color:var(--purple);line-height:1.6}
+  .thankyou{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:32px 24px;text-align:center;margin-bottom:28px}
+  .thankyou h2{font-family:'DM Serif Display',serif;font-size:1.6rem;color:var(--purple);margin-bottom:12px}
+  .thankyou p{font-size:0.9rem;color:var(--body);margin-bottom:8px;line-height:1.7}
+  .thankyou .sign{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--purple);font-weight:600;margin-top:16px}
+  .thankyou .brand-tag{font-family:'DM Serif Display',serif;font-style:italic;color:var(--pink);font-size:0.95rem;margin-top:4px}
+  .submit-btn{width:100%;padding:16px 24px;background:linear-gradient(135deg,var(--pink),var(--purple));color:var(--white);border:none;border-radius:50px;font-family:'Nunito',sans-serif;font-size:1rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 20px rgba(224,69,123,0.35);transition:all 0.2s;-webkit-tap-highlight-color:transparent}
+  .submit-btn:active{transform:scale(0.97);opacity:0.92}
+  #success-msg{display:none;background:linear-gradient(135deg,#FFF0F6,var(--blush));border:1px solid var(--border);border-radius:var(--radius);padding:40px 24px;text-align:center;margin-bottom:40px}
+  #success-msg h2{font-family:'DM Serif Display',serif;font-size:1.8rem;color:var(--purple);margin-bottom:12px}
+  #success-msg p{color:var(--body);font-size:0.92rem;line-height:1.7}
+  @media(max-width:400px){.options-grid{grid-template-columns:1fr}.options-grid.cols-3{grid-template-columns:1fr 1fr}.hero h1{font-size:1.7rem}}
+</style>
+</head>
+<body>
+<div id="progress-bar"></div>
+<header class="site-header">
+  <div class="brand">Mindful Fertility <span>by Dr Anjitha</span></div>
+  <div class="badge">&#9792; Female Health History</div>
+</header>
+<div class="wrapper">
+  <div class="hero">
+    <h1>Your Health Story</h1>
+    <p class="tagline">A deeper look at your hormonal &amp; reproductive health</p>
+  </div>
+
+  <div class="letter">
+    <p class="salutation">Dear Beautiful Soul,</p>
+    <p>This form is designed to help me understand your health in much greater depth — beyond what a standard consultation might cover.</p>
+    <p>Please take your time with each section. <em>There are no right or wrong answers.</em> The more openly you share, the better I can support you.</p>
+    <p>Everything you share is completely confidential. ❤️</p>
+    <p class="sign">— Dr. Anjitha, MBBS, MS (OBG)</p>
+  </div>
+
+  <!-- REMINDER BOX -->
+  <div class="reminder-box">
+    <h3>&#128276; Before Your Consultation</h3>
+    <p>Please complete this form <span class="deadline">at least 48 hours before your appointment.</span></p>
+    <p>Also email all your previous medical reports to:</p>
+    <p class="email">dr.mindfulfertility@gmail.com</p>
+    <p style="margin-top:8px;font-size:0.82rem;color:var(--muted);">This allows me to review your complete history before we meet, so every minute of our consultation is focused on you — not paperwork.</p>
+  </div>
+
+  <form id="female-form" action="https://formspree.io/f/meebrlaw" method="POST">
+
+    <!-- 1. Personal -->
+    <div class="section">
+      <div class="section-header" onclick="toggle(this)">
+        <div class="section-num">1</div>
+        <div class="section-title">About You</div>
+        <div class="section-chevron open">▾</div>
+      </div>
+      <div class="section-body">
+        <div class="q-block"><label class="q-label">Full name</label><input type="text" name="full_name" placeholder="Your name"></div>
+        <div class="q-block"><label class="q-label">Date of birth</label><input type="text" name="dob" placeholder="DD / MM / YYYY"></div>
+        <div class="q-block"><label class="q-label">Partner's name</label><input type="text" name="partner_name" placeholder="Your partner's name"></div>
+        <div class="q-block"><label class="q-label">Height &amp; weight</label>
+          <div class="inline-field"><input type="text" name="height" placeholder="Height (cm)"><input type="text" name="weight" placeholder="Weight (kg)"></div>
+        </div>
+        <div class="q-block"><label class="q-label">Occupation</label><input type="text" name="occupation" placeholder="What do you do?"></div>
+        <!-- ADDITION 1: How long trying to conceive -->
+        <div class="q-block"><label class="q-label">How long have you been trying to conceive?</label>
+          <div class="options-grid">
+            <div class="pill"><input type="radio" name="ttc_duration" id="ttc1"><label for="ttc1">Less than 6 months</label></div>
+            <div class="pill"><input type="radio" name="ttc_duration" id="ttc2"><label for="ttc2">6–12 months</label></div>
+            <div class="pill"><input type="radio" name="ttc_duration" id="ttc3"><label for="ttc3">1–2 years</label></div>
+            <div class="pill"><input type="radio" name="ttc_duration" id="ttc4"><label for="ttc4">More than 2 years</label></div>
+            <div class="pill"><input type="radio" name="ttc_duration" id="ttc5"><label for="ttc5">Not yet trying — preparing</label></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Menstrual -->
+    <div class="section">
+      <div class="section-header" onclick="toggle(this)">
+        <div class="section-num">2</div>
+        <div class="section-title">Menstrual History</div>
+        <div class="section-chevron open">▾</div>
+      </div>
+      <div class="section-body">
+        <div class="q-block"><label class="q-label">Age when periods first started</label>
+          <div class="inline-field"><input type="number" name="menarche_age" placeholder="—" min="8" max="20"><span class="unit">years old</span></div>
+        </div>
+        <div class="q-block"><label class="q-label">Are your periods regular?</label>
+          <div class="options-grid">
+            <div class="pill"><input type="radio" name="reg" id="r1"><label for="r1">Yes, very regular</label></div>
+            <div class="pill"><input type="radio" name="reg" id="r2"><label for="r2">Mostly regular</label></div>
+            <div class="pill"><input type="radio" name="reg" id="r3"><label for="r3">Irregular</label></div>
+            <div class="pill"><input type="radio" name="reg" id="r4"><label for="r4">Very unpredictable</label></div>
+          </div>
+        </div>
+        <div class="q-block"><label class="q-label">Typical cycle length</label>
+          <div class="inline-field"><input type="number" name="cycle_length" placeholder="—" min="15" max="90"><span class="unit">days</span></div>
+        </div>
+        <div class="q-block"><label class="q-label">Period duration</label>
+          <div class="inline-field"><input type="number" name="period_duration" placeholder="—" min="1" max="15"><span class="unit">days</span></div>
+        </div>
+        <div class="q-block"><label class="q-label">Flow heaviness</label>
+          <div class="options-grid">
+            <div class="pill"><input type="radio" name="flow" id="fl1"><label for="fl1">Very light</label></div>
+            <div class="pill"><input type="radio" name="flow" id="fl2"><label for="fl2">Light</label></div>
+            <div class="pill"><input type="radio" name="flow" id="fl3"><label for="fl3">Moderate</label></div>
+            <div class="pill"><input type="radio" name="flow" id="fl4"><label for="fl4">Heavy</label></div>
+            <div class="pill"><input type="radio" name="flow" id="fl5"><label for="fl5">Very heavy / soaking through</label></div>
+          </div>
+        </div>
+        <div class="q-block"><label class="q-label">Symptoms you experience</label>
+          <div class="options-grid">
+            <div class="pill multi"><input type="checkbox" name="symptoms" id="ms1"><label for="ms1">Painful cramps</label></div>
+            <div class="pill multi"><input type="checkbox" name="symptoms" id="ms2"><label for="ms2">Clots in flow</label></div>
+            <div class="pill multi"><input type="checkbox" name="symptoms" id="ms3"><label for="ms3">Brown spotting before period</label></div>
+            <div class="pill multi"><input type="checkbox" name="symptoms" id="ms4"><label for="ms4">Mid-cycle spotting</label></div>
+            <div class="pill multi"><input type="checkbox" name="symptoms" id="ms5"><label for="ms5">PMS / mood changes</label></div>
+            <div class="pill multi"><input type="checkbox" name="symptoms" id="ms6"><label for="ms6">Bloating</label></div>
+            <div class="pill multi"><input type="checkbox" name="symptoms" id="ms7"><label for="ms7">Breast tenderness</label></div>
+            <div class="pill multi"><input type="checkbox" name="symptoms" id="ms8"><label for="ms8">Headaches around period</label></div>
+            <div class="pill multi"><input type="checkbox" name="symptoms" id="ms9"><label for="ms9">None</label></div>
+          </div>
+        </div>
+        <div class="q-block"><label class="q-label">Pain level during periods</label>
+          <div class="options-grid cols-3">
+            <div class="pill"><input type="radio" name="pain" id="p1"><label for="p1">0–2 (mild)</label></div>
+            <div class="pill"><input type="radio" name="pain" id="p2"><label for="p2">3–5 (moderate)</label></div>
+            <div class="pill"><input type="radio" name="pain" id="p3"><label for="p3">6–8 (severe)</label></div>
+            <div class="pill"><input type="radio" name="pain" id="p4"><label for="p4">9–10 (debilitating)</label></div>
+          </div>
+        </div>
+        <div class="q-block"><label class="q-label">Have you ever missed periods (outside of pregnancy)?</label>
+          <div class="options-grid">
+            <div class="pill"><input type="radio" name="missed" id="mp1"><label for="mp1">No</label></div>
+            <div class="pill"><input type="radio" name="missed" id="mp2"><label for="mp2">Occasionally</label></div>
+            <div class="pill"><input type="radio" name="missed" id="mp3"><label for="mp3">Frequently</label></div>
+            <div class="pill"><input type="radio" name="missed" id="mp4"><label for="mp4">Yes — for extended periods</label></div>
+          </div>
+        </div>
+        <div class="q-block"><label class="q-label">Are you currently tracking your cycle?</label>
+          <div class="options-grid">
+            <div class="pill multi"><input type="checkbox" name="tracking" id="tr1"><label for="tr1">App only</label></div>
+            <div class="pill multi"><input type="checkbox" name="tracking" id="tr2"><label for="tr2">BBT (basal body temp)</label></div>
+            <div class="pill multi"><input type="checkbox" name="tracking" id="tr3"><label for="tr3">LH strips / OPKs</label></div>
+            <div class="pill multi"><input type="checkbox" name="tracking" id="tr4"><label for="tr4">Cervical mucus</label></div>
+            <div class="pill multi"><input type="checkbox" name="tracking" id="tr5"><label for="tr5">Not currently tracking</label></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Hormonal & contraceptive -->
+    <div class="section">
+      <div class="section-header" onclick="toggle(this)">
+        <div class="section-num">3</div>
+        <div class="section-title">Hormonal &amp; Contraceptive History</div>
+        <div class="section-chevron open">▾</div>
+      </div>
+      <div class="section-body">
+        <div class="q-block"><label class="q-label">Have you ever used hormonal contraception?</label>
+          <div class="options-grid">
+            <div class="pill multi"><input type="checkbox" name="contraception" id="hc1"><label for="hc1">Combined pill (OCP)</label></div>
+            <div class="pill multi"><input type="checkbox" name="contraception" id="hc2"><label for="hc2">Progesterone-only pill</label></div>
+            <div class="pill multi"><input type="checkbox" name="contraception" id="hc3"><label for="hc3">Hormonal IUD (Mirena)</label></div>
+            <div class="pill multi"><input type="checkbox" name="contraception" id="hc4"><label for="hc4">Copper IUD</label></div>
+            <div class="pill multi"><input type="checkbox" name="contraception" id="hc5"><label for="hc5">Implant</label></div>
+            <div class="pill multi"><input type="checkbox" name="contraception" id="hc6"><label for="hc6">Injection (Depo-Provera)</label></div>
+            <div class="pill multi"><input type="checkbox" name="contraception" id="hc7"><label for="hc7">Patch / ring</label></div>
+            <div class="pill multi"><input type="checkbox" name="contraception" id="hc8"><label for="hc8">Never used hormonal contraception</label></div>
+          </div>
+        </div>
+        <div class="q-block"><label class="q-label">How long ago did you stop contraception?</label>
+          <input type="text" name="contraception_stopped" placeholder="e.g. 6 months ago, 2 years ago, still using">
+        </div>
+        <div class="q-block"><label class="q-label">Did your periods return normally after stopping?</label>
+          <div class="options-grid">
+            <div class="pill"><input type="radio" name="postpill" id="pp1"><label for="pp1">Yes, within 1–2 months</label></div>
+            <div class="pill"><input type="radio" name="postpill" id="pp2"><label for="pp2">Took 3–6 months</label></div>
+            <div class="pill"><input type="radio" name="postpill" id="pp3"><label for="pp3">Took longer than 6 months</label></div>
+            <div class="pill"><input type="radio" name="postpill" id="pp4"><label for="pp4">Still irregular / haven't returned</label></div>
+            <div class="pill"><input type="radio" name="postpill" id="pp5"><label for="pp5">Not applicable</label></div>
+          </div>
+        </div>
+        <div class="q-block"><label class="q-label">Have you had hormone blood tests done?</label>
+          <div class="options-grid">
+            <div class="pill multi"><input type="checkbox" name="hormone_tests" id="ht1"><label for="ht1">AMH (ovarian reserve)</label></div>
+            <div class="pill multi"><input type="checkbox" name="hormone_tests" id="ht2"><label for="ht2">FSH / LH</label></div>
+            <div class="pill multi"><input type="checkbox" name="hormone_tests" id="ht3"><label for="ht3">Oestrogen / Progesterone</label></div>
+            <div class="pill multi"><input type="checkbox" name="hormone_tests" id="ht4"><label for="ht4">Prolactin</label></div>
+            <div class="pill multi"><input type="checkbox" name="hormone_tests" id="ht5"><label for="ht5">Testosterone / DHEAS</label></div>
+            <div class="pill multi"><input type="checkbox" name="hormone_tests" id="ht6"><label for="ht6">Thyroid (TSH, T3, T4)</label></div>
+            <div class="pill multi"><input type="checkbox" name="hormone_tests" id="ht7"><label for="ht7">Insulin / fasting glucose</label></div>
+            <div class="pill multi"><input type="checkbox" name="hormone_tests" id="ht8"><label for="ht8">No, not yet</label></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Reproductive & gynaecological -->
+    <div class="section">
+      <div class="section-header" onclick="toggle(this)">
+        <div class="section-num">4</div>
+        <div class="section-title">Reproductive &amp; Gynaecological History</div>
+        <div class="section-chevron open">▾</div>
+      </div>
+      <div class="section-body">
+        <div class="q-block"><label class="q-label">Have you ever been diagnosed with:</label>
+          <div class="options-grid">
+            <div class="pill multi"><input type="checkbox" name="diagnosis" id="gyn1"><label for="gyn1">PCOS</label></div>
+            <div class="pill multi"><input type="checkbox" name="diagnosis" id="gyn2"><label for="gyn2">Endometriosis</label></div>
+            <div class="pill multi"><input type="checkbox" name="diagnosis" id="gyn3"><label for="gyn3">Fibroids</label></div>
+            <div class="pill multi"><input type="checkbox" name="diagnosis" id="gyn4"><label for="gyn4">Polyps</label></div>
+            <div class="pill multi"><input type="checkbox" name="diagnosis" id="gyn5"><label for="gyn5">Ovarian cysts</label></div>
+            <div class="pill multi"><input type="checkbox" name="diagnosis" id="gyn6"><label for="gyn6">Premature ovarian insufficiency</label></div>
+            <div class="pill multi"><input type="checkbox" name="diagnosis" id="gyn7"><label for="gyn7">Asherman's syndrome</label></div>
+            <div class="pill multi"><input type="checkbox" name="diagnosis" id="gyn8"><label for="gyn8">Blocked / damaged tubes</label></div>
+            <div class="pill multi"><input type="checkbox" name="diagnosis" id="gyn9"><label for="gyn9">Cervical issues</label></div>
+            <div class="pill multi"><input type="checkbox" name="diagnosis" id="gyn10"><label for="gyn10">STI history</label></div>
+            <div class="pill multi"><input type="checkbox" name="diagnosis" id="gyn11"><label for="gyn11">None of the above</label></div>
+          </div>
+        </div>
+        <div class="q-block"><label class="q-label">Any gynaecological surgeries?</label>
+          <div class="options-grid">
+            <div class="pill multi"><input type="checkbox" name="gyn_surgery" id="gs1"><label for="gs1">Laparoscopy</label></div>
+            <div class="pill multi"><input type="checkbox" name="gyn_surgery" id="gs2"><label for="gs2">Hysteroscopy</label></div>
+            <div class="pill multi"><input type="checkbox" name="gyn_surgery" id="gs3"><label for="gs3">D&amp;C / ERPC</label></div>
+            <div class="pill multi"><input type="checkbox" name="gyn_surgery" id="gs4"><label for="gs4">Fibroid removal</label></div>
+            <div class="pill multi"><input type="checkbox" name="gyn_surgery" id="gs5"><label for="gs5">Ovarian drilling</label></div>
+            <div class="pill multi"><input type="checkbox" name="gyn_surgery" id="gs6"><label for="gs6">Cyst removal</label></div>
+            <div class="pill multi"><input type="checkbox" name="gyn_surgery" id="gs7"><label for="gs7">Tubal surgery</label></div>
+            <div class="pill multi"><input type="checkbox" name="gyn_surgery" id="gs8"><label for="gs8">None</label></div>
+          </div>
+        </div>
+        <div class="q-block"><label class="q-label">Have you had a HSG (tube test) done?</label>
+          <div class="options-grid cols-3">
+            <div class="pill"><input type="radio" name="hsg" id="hsg1"><label for="hsg1">Yes — tubes clear</label></div>
+            <div class="pill"><input type="radio" name="hsg" id="hsg2"><label for="hsg2">Yes — abnormality found</label></div>
+            <div class="pill"><input type="radio" name="hsg" id="hsg3"><label for="hsg3">No, not yet</label></div>
+          </div>
+        </div>
+        <div class="q-block"><label class="q-label">When was your last cervical smear / Pap test?</label>
+          <input type="text" name="last_pap" placeholder="e.g. 1 year ago, 2023, never done">
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Pregnancy history -->
+    <div class="section">
+      <div class="section-header" onclick="toggle(this)">
+        <div class="section-num">5</div>
+        <div class="section-title">Pregnancy History</div>
+        <div class="section-chevron open">▾</div>
+      </div>
+      <div class="section-body">
+        <div class="callout">Only share what feels comfortable. This is a safe, judgment-free space. ❤️</div>
+        <div class="q-block"><label class="q-label">Total number of pregnancies</label>
+          <div class="inline-field"><input type="number" name="total_pregnancies" placeholder="—" min="0"><span class="unit">pregnancies</span></div>
+        </div>
+        <div class="q-block"><label class="q-label">Outcomes — tick all that apply</label>
+          <div class="options-grid">
+            <div class="pill multi"><input type="checkbox" name="pregnancy_outcome" id="po1"><label for="po1">Live birth(s)</label></div>
+            <div class="pill multi"><input type="checkbox" name="pregnancy_outcome" id="po2"><label for="po2">Miscarriage(s)</label></div>
+            <div class="pill multi"><input type="checkbox" name="pregnancy_outcome" id="po3"><label for="po3">Ectopic pregnancy</label></div>
+            <div class="pill multi"><input type="checkbox" name="pregnancy_outcome" id="po4"><label for="po4">Termination</label></div>
+            <div class="pill multi"><input type="checkbox" name="pregnancy_outcome" id="po5"><label for="po5">Stillbirth</label></div>
+            <div class="pill multi"><input type="checkbox" name="pregnancy_outcome" id="po6"><label for="po6">Chemical pregnancy</label></div>
+            <div class="pill multi"><input type="checkbox" name="pregnancy_outcome" id="po7"><label for="po7">No previous pregnancies</label></div>
+          </div>
+        </div>
+        <div class="q-block"><label class="q-label">Please tell me a little more about your pregnancy history</label>
+          <p class="q-hint">Share only what feels right</p>
+          <textarea name="pregnancy_details" style="min-height:110px" placeholder="Share what feels right…"></textarea>
+        </div>
+        <div class="q-block"><label class="q-label">Have you had investigations for recurrent loss?</label>
+          <div class="options-grid cols-3">
+            <div class="pill"><input type="radio" name="rpl" id="rpl1"><label for="rpl1">Yes</label></div>
+            <div class="pill"><input type="radio" name="rpl" id="rpl2"><label for="rpl2">No</label></div>
+            <div class="pill"><input type="radio" name="rpl" id="rpl3"><label for="rpl3">Not applicable</label></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. General medical -->
+    <div class="section">
+      <div class="section-header" onclick="toggle(this)">
+        <div class="section-num">6</div>
+        <div class="section-title">General Medical History</div>
+        <div class="section-chevron open">▾</div>
+      </div>
+      <div class="section-body">
+        <div class="q-block"><label class="q-label">Do you have any of the following conditions?</label>
+          <div class="options-grid">
+            <div class="pill multi"><input type="checkbox" name="medical" id="med1"><label for="med1">Thyroid disorder</label></div>
+            <div class="pill multi"><input type="checkbox" name="medical" id="med2"><label for="med2">Diabetes / insulin resistance</label></div>
+            <div class="pill multi"><input type="checkbox" name="medical" id="med3"><label for="med3">Autoimmune condition</label></div>
+            <div class="pill multi"><input type="checkbox" name="medical" id="med4"><label for="med4">Anaemia</label></div>
+            <div class="pill multi"><input type="checkbox" name="medical" id="med5"><label for="med5">High blood pressure</label></div>
+            <div class="pill multi"><input type="checkbox" name="medical" id="med6"><label for="med6">Coeliac disease</label></div>
+            <div class="pill multi"><input type="checkbox" name="medical" id="med7"><label for="med7">Clotting disorder</label></div>
+            <div class="pill multi"><input type="checkbox" name="medical" id="med8"><label for="med8">Mental health condition</label></div>
+            <div class="pill multi"><input type="checkbox" name="medical" id="med9"><label for="med9">None of the above</label></div>
+          </div>
+        </div>
+        <div class="q-block"><label class="q-label">Any other medical conditions or past surgeries?</label>
+          <textarea name="other_medical" placeholder="Anything else we should know…"></textarea>
+        </div>
+        <div class="q-block"><label class="q-label">Current medications</label>
+          <textarea name="medications" placeholder="Include prescription, over-the-counter, and herbal remedies…"></textarea>
+        </div>
+        <div class="q-block"><label class="q-label">Known allergies</label>
+          <input type="text" name="allergies" placeholder="Medications, foods, other…">
+        </div>
+        <div class="q-block"><label class="q-label">Family history relevant to fertility</label>
+          <p class="q-hint">e.g. early menopause, PCOS, endometriosis, thyroid in mother/sisters</p>
+          <textarea name="family_history" placeholder="…"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. Lifestyle -->
+    <div class="section">
+      <div class="section-header" onclick="toggle(this)">
+        <div class="section-num">7</div>
+        <div class="section-title">Lifestyle &amp; Daily Habits</div>
+        <div class="section-chevron open">▾</div>
+      </div>
+      <div class="section-body">
+        <div class="q-block"><label class="q-label">How would you describe your diet?</label>
+          <div class="options-grid">
+            <div class="pill multi"><input type="checkbox" name="diet" id="d1"><label for="d1">Balanced / whole foods</label></div>
+            <div class="pill multi"><input type="checkbox" name="diet" id="d2"><label for="d2">Mostly plant-based</label></div>
+            <div class="pill multi"><input type="checkbox" name="diet" id="d3"><label for="d3">High in processed / fast food</label></div>
+            <div class="pill multi"><input type="checkbox" name="diet" id="d4"><label for="d4">Vegetarian / vegan</label></div>
+            <div class="pill multi"><input type="checkbox" name="diet" id="d5"><label for="d5">No specific pattern</label></div>
+          </div>
+        </div>
+        <div class="q-block"><label class="q-label">How often do you exercise?</label>
+          <div class="options-grid">
+            <div class="pill"><input type="radio" name="exercise" id="ex1"><label for="ex1">Rarely / never</label></div>
+            <div class="pill"><input type="radio" name="exercise" id="ex2"><label for="ex2">1–2 times a week</label></div>
+            <div class="pill"><input type="radio" name="exercise" id="ex3"><label for="ex3">3–4 times a week</label></div>
+            <div class="pill"><input type="radio" name="exercise" id="ex4"><label for="ex4">5+ times a week</label></div>
+          </div>
+        </div>
+        <div class="q-block"><label class="q-label">How many hours do you sleep per night?</label>
+          <div class="options-grid">
+            <div class="pill"><input type="radio" name="sleep" id="sl1"><label for="sl1">Less than 5 hours</label></div>
+            <div class="pill"><input type="radio" name="sleep" id="sl2"><label for="sl2">5–6 hours</label></div>
+            <div class="pill"><input type="radio" name="sleep" id="sl3"><label for="sl3">7–8 hours</label></div>
+            <div class="pill"><input type="radio" name="sleep" id="sl4"><label for="sl4">More than 9 hours</label></div>
+          </div>
+        </div>
+        <div class="q-block"><label class="q-label">How would you describe your stress levels?</label>
+          <div class="options-grid">
+            <div class="pill"><input type="radio" name="stress" id="st1"><label for="st1">Low — generally calm</label></div>
+            <div class="pill"><input type="radio" name="stress" id="st2"><label for="st2">Moderate — manageable</label></div>
+            <div class="pill"><input type="radio" name="stress" id="st3"><label for="st3">High — often overwhelmed</label></div>
+            <div class="pill"><input type="radio" name="stress" id="st4"><label for="st4">Very high — burnout</label></div>
+          </div>
+        </div>
+        <div class="q-block"><label class="q-label">Do you smoke?</label>
+          <div class="options-grid">
+            <div class="pill"><input type="radio" name="smoke" id="smk1"><label for="smk1">Non-smoker</label></div>
+            <div class="pill"><input type="radio" name="smoke" id="smk2"><label for="smk2">Occasional</label></div>
+            <div class="pill"><input type="radio" name="smoke" id="smk3"><label for="smk3">Regular smoker</label></div>
+            <div class="pill"><input type="radio" name="smoke" id="smk4"><label for="smk4">Recently quit</label></div>
+          </div>
+        </div>
+        <div class="q-block"><label class="q-label">Do you drink alcohol?</label>
+          <div class="options-grid">
+            <div class="pill"><input type="radio" name="alcohol" id="alc1"><label for="alc1">Never / rarely</label></div>
+            <div class="pill"><input type="radio" name="alcohol" id="alc2"><label for="alc2">Occasionally (social)</label></div>
+            <div class="pill"><input type="radio" name="alcohol" id="alc3"><label for="alc3">Weekly</label></div>
+            <div class="pill"><input type="radio" name="alcohol" id="alc4"><label for="alc4">Most days</label></div>
+          </div>
+        </div>
+        <div class="q-block"><label class="q-label">Current supplements</label>
+          <div class="options-grid">
+            <div class="pill multi"><input type="checkbox" name="supplements" id="sp1"><label for="sp1">Folic acid / folate</label></div>
+            <div class="pill multi"><input type="checkbox" name="supplements" id="sp2"><label for="sp2">Vitamin D</label></div>
+            <div class="pill multi"><input type="checkbox" name="supplements" id="sp3"><label for="sp3">Myo-inositol</label></div>
+            <div class="pill multi"><input type="checkbox" name="supplements" id="sp4"><label for="sp4">CoQ10</label></div>
+            <div class="pill multi"><input type="checkbox" name="supplements" id="sp5"><label for="sp5">Omega-3</label></div>
+            <div class="pill multi"><input type="checkbox" name="supplements" id="sp6"><label for="sp6">Iron</label></div>
+            <div class="pill multi"><input type="checkbox" name="supplements" id="sp7"><label for="sp7">Prenatal multivitamin</label></div>
+            <div class="pill multi"><input type="checkbox" name="supplements" id="sp8"><label for="sp8">None currently</label></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8. Emotional -->
+    <div class="section">
+      <div class="section-header" onclick="toggle(this)">
+        <div class="section-num">8</div>
+        <div class="section-title">Your Emotional Wellbeing</div>
+        <div class="section-chevron open">▾</div>
+      </div>
+      <div class="section-body">
+        <div class="callout">Your emotional health is just as important as your physical health. You are safe here. ❤️</div>
+        <div class="q-block"><label class="q-label">How are you feeling emotionally right now?</label>
+          <div class="options-grid">
+            <div class="pill multi"><input type="checkbox" name="emotional" id="em1"><label for="em1">Hopeful</label></div>
+            <div class="pill multi"><input type="checkbox" name="emotional" id="em2"><label for="em2">Anxious</label></div>
+            <div class="pill multi"><input type="checkbox" name="emotional" id="em3"><label for="em3">Exhausted</label></div>
+            <div class="pill multi"><input type="checkbox" name="emotional" id="em4"><label for="em4">Grieving</label></div>
+            <div class="pill multi"><input type="checkbox" name="emotional" id="em5"><label for="em5">Frustrated</label></div>
+            <div class="pill multi"><input type="checkbox" name="emotional" id="em6"><label for="em6">Isolated / lonely</label></div>
+            <div class="pill multi"><input type="checkbox" name="emotional" id="em7"><label for="em7">Mostly okay</label></div>
+          </div>
+        </div>
+        <div class="q-block"><label class="q-label">Is there anything emotionally you'd like me to be sensitive to?</label>
+          <textarea name="emotional_notes" placeholder="…"></textarea>
+        </div>
+        <div class="q-block"><label class="q-label">Are you currently receiving any mental health support?</label>
+          <div class="options-grid cols-3">
+            <div class="pill"><input type="radio" name="mhs" id="mh1"><label for="mh1">Yes</label></div>
+            <div class="pill"><input type="radio" name="mhs" id="mh2"><label for="mh2">No</label></div>
+            <div class="pill"><input type="radio" name="mhs" id="mh3"><label for="mh3">Considering it</label></div>
+          </div>
+        </div>
+        <div class="q-block"><label class="q-label">What are you hoping to understand or achieve from this consultation?</label>
+          <textarea name="goals" placeholder="…"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reminder at bottom -->
+    <div class="reminder-box">
+      <h3>&#128276; One Last Reminder</h3>
+      <p>Please email all your medical reports to <span class="email">dr.mindfulfertility@gmail.com</span></p>
+      <p><span class="deadline">At least 48 hours before your consultation.</span></p>
+      <p style="margin-top:8px;font-size:0.82rem;color:var(--muted);">Include any blood tests, scans, previous consultation notes and semen analysis reports.</p>
+    </div>
+
+    
+    <!-- How can I call you -->
+    <div class="section">
+      <div class="section-header" onclick="toggle(this)">
+        <div class="section-num">9</div>
+        <div class="section-title">Consultation Call Details</div>
+        <div class="section-chevron open">▾</div>
+      </div>
+      <div class="section-body">
+        <div class="q-block">
+          <label class="q-label">Our consultation will be via Google Meet.</label>
+          <p class="q-hint">I will send you a Google Meet link after booking is confirmed via Instagram DM.</p>
+          <input type="text" name="call_note" placeholder="Any notes about your availability or time zone? e.g. I am in Dubai (IST +1.5)">
+        </div>
+      </div>
+    </div>
+
+<div class="thankyou">
+      <h2>Thank you ❤️</h2>
+      <p>Your story matters deeply. I will read every word carefully before we meet.</p>
+      <p class="sign">With warmth,<br>Dr. Anjitha, MBBS, MS (OBG)</p>
+      <p class="brand-tag">Mindful Fertility</p>
+    </div>
+
+    <button type="submit" class="submit-btn">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>
+      Send my health history ❤️
+    </button>
+  </form>
+
+  <div id="success-msg">
+    <h2>Received! ❤️</h2>
+    <p>Thank you for sharing your health history so openly. I will review it personally before our consultation.</p>
+    <p style="margin-top:10px;font-size:0.88rem;color:var(--muted);">Don't forget to email your medical reports to <strong>dr.mindfulfertility@gmail.com</strong> at least 48 hours before your appointment.</p>
+    <p style="margin-top:14px;font-family:'DM Serif Display',serif;font-style:italic;color:var(--purple);">I look forward to meeting you.</p>
+    <p style="margin-top:16px;font-weight:600;color:var(--purple);">— Dr. Anjitha &nbsp;|&nbsp; <span style="color:var(--pink);font-style:italic;">Mindful Fertility</span></p>
+  </div>
+</div>
+<script>
+  function toggle(h){
+    const ch=h.querySelector('.section-chevron'),b=h.nextElementSibling,open=ch.classList.contains('open');
+    if(open){b.style.display='none';ch.classList.remove('open')}
+    else{b.style.display='flex';ch.classList.add('open')}
+  }
+  function updateProgress(){
+    const inputs=document.querySelectorAll('input:not([type=radio]):not([type=checkbox]),textarea');
+    const radios=[...new Set([...document.querySelectorAll('input[type=radio]')].map(r=>r.name))];
+    let filled=0,total=inputs.length+radios.length;
+    inputs.forEach(i=>{if(i.value.trim())filled++});
+    radios.forEach(n=>{if(document.querySelector(`input[name="${n}"]:checked`))filled++});
+    document.getElementById('progress-bar').style.width=(filled/total*100)+'%';
+  }
+  document.getElementById('female-form').addEventListener('input',updateProgress);
+  document.getElementById('female-form').addEventListener('submit',function(e){
+    e.preventDefault();this.style.display='none';
+    document.getElementById('success-msg').style.display='block';
+    document.getElementById('progress-bar').style.width='100%';
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+</script>
+</body>
+</html>
