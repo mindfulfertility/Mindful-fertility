@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mindful Fertility — Male Partner Health History</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Nunito:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap');
+  :root{--purple:#3D1F6E;--pink:#E0457B;--teal:#2E8B8B;--blush:#F0F8F8;--blush-mid:#E0F0F0;--white:#FFFFFF;--body:#4A4A4A;--muted:#9A8FA0;--border:#B8D8D8;--radius:14px;--radius-sm:8px}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'Nunito',sans-serif;font-weight:400;background:#F4FAF9;color:var(--body);font-size:16px;line-height:1.6;min-height:100vh}
+  #progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--teal),var(--purple));width:0%;transition:width 0.4s ease;z-index:100}
+  .site-header{background:var(--white);border-bottom:1px solid var(--border);padding:16px 24px;text-align:center;position:sticky;top:0;z-index:50}
+  .brand{font-family:'DM Serif Display',serif;font-size:1.2rem;color:var(--purple)}.brand span{color:var(--pink);font-style:italic}
+  .badge{display:inline-block;margin-top:6px;background:var(--blush-mid);color:var(--teal);font-size:0.75rem;font-weight:600;padding:3px 12px;border-radius:20px;letter-spacing:0.04em}
+  .wrapper{max-width:640px;margin:0 auto;padding:0 20px 80px}
+  .hero{padding:40px 0 24px;text-align:center}
+  .hero h1{font-family:'DM Serif Display',serif;font-size:2rem;color:var(--purple);line-height:1.2;margin-bottom:8px}
+  .hero .tagline{font-family:'DM Serif Display',serif;font-style:italic;font-size:1.1rem;color:var(--teal)}
+  .letter{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:28px;margin-bottom:32px;position:relative;overflow:hidden}
+  .letter::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:linear-gradient(180deg,var(--teal),var(--purple))}
+  .letter .salutation{font-family:'DM Serif Display',serif;font-size:1.1rem;color:var(--purple);margin-bottom:12px}
+  .letter p{font-size:0.93rem;color:var(--body);margin-bottom:10px;line-height:1.7}
+  .letter .sign{font-family:'DM Serif Display',serif;color:var(--purple);font-size:0.95rem;margin-top:16px}
+  .reminder-box{background:linear-gradient(135deg,#E8F8F8,#D8F0F0);border:2px solid var(--teal);border-radius:var(--radius);padding:20px 24px;margin-bottom:28px;text-align:center}
+  .reminder-box h3{font-family:'DM Serif Display',serif;font-size:1.1rem;color:var(--purple);margin-bottom:10px}
+  .reminder-box p{font-size:0.88rem;color:var(--body);line-height:1.7;margin-bottom:6px}
+  .reminder-box .email{font-weight:700;color:var(--teal);font-size:0.95rem}
+  .reminder-box .deadline{font-weight:700;color:var(--purple)}
+  .section{margin-bottom:28px;background:var(--white);border-radius:var(--radius);border:1px solid var(--border);overflow:hidden}
+  .section-header{background:var(--blush-mid);padding:14px 20px;display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
+  .section-num{width:30px;height:30px;background:var(--teal);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:600;color:var(--white);flex-shrink:0}
+  .section-title{font-family:'DM Serif Display',serif;font-size:1.05rem;color:var(--purple);flex:1}
+  .section-chevron{color:var(--teal);font-size:1rem;transition:transform 0.3s;flex-shrink:0}
+  .section-chevron.open{transform:rotate(180deg)}
+  .section-body{padding:20px;display:flex;flex-direction:column;gap:20px}
+  .q-block{display:flex;flex-direction:column;gap:7px}
+  .q-label{font-size:0.88rem;font-weight:600;color:var(--purple);line-height:1.4}
+  .q-hint{font-size:0.78rem;color:var(--muted);font-style:italic;margin-top:-3px}
+  input[type=text],input[type=number],textarea{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'Nunito',sans-serif;font-size:0.88rem;color:var(--body);background:var(--blush);outline:none;transition:border-color 0.2s,box-shadow 0.2s;-webkit-appearance:none}
+  input:focus,textarea:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(46,139,139,0.1);background:var(--white)}
+  textarea{resize:vertical;min-height:85px;line-height:1.6}
+  .inline-field{display:flex;align-items:center;gap:10px}
+  .inline-field input{width:80px;text-align:center}
+  .unit{font-size:0.82rem;color:var(--muted);white-space:nowrap}
+  .options-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .options-grid.cols-1{grid-template-columns:1fr}
+  .options-grid.cols-3{grid-template-columns:1fr 1fr 1fr}
+  .pill input{display:none}
+  .pill label{display:flex;align-items:center;gap:8px;padding:10px 12px;border:1.5px solid var(--border);border-radius:50px;cursor:pointer;font-size:0.83rem;color:var(--body);background:var(--blush);transition:all 0.18s;line-height:1.3;-webkit-tap-highlight-color:transparent}
+  .pill label::before{content:'';width:16px;height:16px;border:2px solid var(--border);border-radius:50%;flex-shrink:0;background:var(--white);transition:all 0.18s}
+  .pill input:checked+label{border-color:var(--teal);background:linear-gradient(135deg,#F0F8F8,#E0F0F0);color:var(--purple);font-weight:600}
+  .pill input:checked+label::before{background:var(--teal);border-color:var(--teal);box-shadow:inset 0 0 0 3px white}
+  .pill.multi label::before{border-radius:4px}
+  .callout{background:var(--blush);border-left:4px solid var(--teal);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:14px 16px;font-family:'DM Serif Display',serif;font-style:italic;font-size:0.95rem;color:var(--purple);line-height:1.6}
+  .thankyou{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:32px 24px;text-align:center;margin-bottom:28px}
+  .thankyou h2{font-family:'DM Serif Display',serif;font-size:1.6rem;color:var(--purple);margin-bottom:12px}
+  .thankyou p{font-size:0.9rem;color:var(--body);margin-bottom:8px;line-height:1.7}
+  .thankyou .sign{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--purple);font-weight:600;margin-top:16px}
+  .thankyou .brand-tag{font-family:'DM Serif Display',serif;font-style:italic;color:var(--pink);font-size:0.95rem;margin-top:4px}
+  .submit-btn{width:100%;padding:16px 24px;background:linear-gradient(135deg,var(--teal),var(--purple));color:var(--white);border:none;border-radius:50px;font-family:'Nunito',sans-serif;font-size:1rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 20px rgba(46,139,139,0.3);transition:all 0.2s;-webkit-tap-highlight-color:transparent}
+  .submit-btn:active{transform:scale(0.97);opacity:0.92}
+  #success-msg{display:none;background:linear-gradient(135deg,var(--blush),#F4FAF9);border:1px solid var(--border);border-radius:var(--radius);padding:40px 24px;text-align:center;margin-bottom:40px}
+  #success-msg h2{font-family:'DM Serif Display',serif;font-size:1.8rem;color:var(--purple);margin-bottom:12px}
+  #success-msg p{color:var(--body);font-size:0.92rem;line-height:1.7}
+  @media(max-width:400px){.options-grid{grid-template-columns:1fr}.options-grid.cols-3{grid-template-columns:1fr 1fr}.hero h1{font-size:1.7rem}}
+</style>
+</head>
+<body>
+<div id="progress-bar"></div>
+<header class="site-header">
+  <div class="brand">Mindful Fertility <span>by Dr Anjitha</span></div>
+  <div class="badge">&#9794; Male Partner Health History</div>
+</header>
+<div class="wrapper">
+  <div class="hero">
+    <h1>Your Health Story</h1>
+    <p class="tagline">Your health matters just as much in this journey</p>
+  </div>
+
+  <div class="letter">
+    <p class="salutation">Dear Friend,</p>
+    <p>Thank you for taking the time to complete this form. Fertility is a shared journey, and understanding your health is just as important as your partner's.</p>
+    <p>This is a completely confidential, judgment-free space. Please be as open as you feel comfortable being — your honest answers will help me support you both far more effectively.</p>
+    <p>Take your time. ❤️</p>
+    <p class="sign">— Dr. Anjitha, MBBS, MS (OBG) &nbsp;|&nbsp; Mindful Fertility</p>
+  </div>
+
+  <!-- REMINDER BOX -->
+  <div class="reminder-box">
+    <h3>&#128276; Before Your Consultation</h3>
+    <p>Please complete this form <span class="deadline">at least 48 hours before your appointment.</span></p>
+    <p>Also email all your previous medical reports to:</p>
+    <p class="email">dr.mindfulfertility@gmail.com</p>
+    <p style="margin-top:8px;font-size:0.82rem;color:var(--muted);">Include semen analysis reports, hormone tests and any other investigations done.</p>
+  </div>
+
+  <form id="male-form" action="https://formspree.io/f/xeebrlgn" method="POST">
+
+    <!-- 1. Personal -->
+    <div class="section">
+      <div class="section-header" onclick="toggle(this)">
+        <div class="section-num">1</div>
+        <div class="section-title">About You</div>
+        <div class="section-chevron open">▾</div>
+      </div>
+      <div class="section-body">
+        <div class="q-block"><label class="q-label">Full name</label><input type="text" name="full_name" placeholder="Your name"></div>
+        <div class="q-block"><label class="q-label">Date of birth</label><input type="text" name="dob" placeholder="DD / MM / YYYY"></div>
+        <div class="q-block"><label class="q-label">Partner's name</label><input type="text" name="partner_name" placeholder="Your partner's name"></div>
+        <div class="q-block"><label class="q-label">Height &amp; weight</label>
+          <div class="inline-field"><input type="text" name="height" placeholder="Height (cm)"><input type="text" name="weight" placeholder="Weight (kg)"></div>
+        </div>
+        <div class="q-block"><label class="q-label">Occupation</label><input type="text" name="occupation" placeholder="What do you do?"></div>
+      </div>
+    </div>
+
+    <!-- 2. Reproductive -->
+    <div class="section">
+      <div class="section-header" onclick="toggle(this)">
+        <div class="section-num">2</div>
+        <div class="section-title">Reproductive Health</div>
+        <div class="section-chevron open">▾</div>
+      </div>
+      <div class="section-body">
+        <div class="callout">This section is completely confidential. Your results are only shared with your partner with your consent.</div>
+        <div class="q-block"><label class="q-label">Have you had a semen analysis done?</label>
+          <div class="options-grid cols-3">
+            <div class="pill"><input type="radio" name="sa" id="sa1"><label for="sa1">Yes</label></div>
+            <div class="pill"><input type="radio" name="sa" id="sa2"><label for="sa2">No</label></div>
+            <div class="pill"><input type="radio" name="sa" id="sa3"><label for="sa3">Booked / pending</label></div>
+          </div>
+        </div>
+        <div class="q-block"><label class="q-label">If yes, what were the results?</label>
+          <div class="options-grid">
+            <div class="pill"><input type="radio" name="sares" id="sr1"><label for="sr1">Normal</label></div>
+            <div class="pill"><input type="radio" name="sares" id="sr2"><label for="sr2">Low count (oligospermia)</label></div>
+            <div class="pill"><input type="radio" name="sares" id="sr3"><label for="sr3">Poor motility (asthenospermia)</label></div>
+            <div class="pill"><input type="radio" name="sares" id="sr4"><label for="sr4">Abnormal morphology (teratospermia)</label></div>
+            <div class="pill"><input type="radio" name="sares" id="sr5"><label for="sr5">No sperm found (azoospermia)</label></div>
+            <div class="pill"><input type="radio" name="sares" id="sr6"><label for="sr6">Not sure of the details</label></div>
+          </div>
+        </div>
+        <div class="q-block"><label class="q-label">When was the most recent semen analysis?</label>
+          <input type="text" name="sa_date" placeholder="e.g. 6 months ago, 2023">
+        </div>
+        <div class="q-block"><label class="q-label">Have you fathered a child before?</label>
+          <div class="options-grid cols-3">
+            <div class="pill"><input type="radio" name="father" id="f1"><label for="f1">Yes</label></div>
+            <div class="pill"><input type="radio" name="father" id="f2"><label for="f2">No</label></div>
+            <div class="pill"><input type="radio" name="father" id="f3"><label for="f3">Unsure</label></div>
+          </div>
+        </div>
+        <div class="q-block"><label class="q-label">Have you ever been diagnosed with any of the following?</label>
+          <div class="options-grid">
+            <div class="pill multi"><input type="checkbox" name="rep_diagnosis" id="rep1"><label for="rep1">Varicocele</label></div>
+            <div class="pill multi"><input type="checkbox" name="rep_diagnosis" id="rep2"><label for="rep2">Undescended testes</label></div>
+            <div class="pill multi"><input type="checkbox" name="rep_diagnosis" id="rep3"><label for="rep3">Testicular torsion</label></div>
+            <div class="pill multi"><input type="checkbox" name="rep_diagnosis" id="rep4"><label for="rep4">Epididymitis / orchitis</label></div>
+            <div class="pill multi"><input type="checkbox" name="rep_diagnosis" id="rep5"><label for="rep5">STI history</label></div>
+            <div class="pill multi"><input type="checkbox" name="rep_diagnosis" id="rep6"><label for="rep6">Hormonal imbalance</label></div>
+            <div class="pill multi"><input type="checkbox" name="rep_diagnosis" id="rep7"><label for="rep7">Retrograde ejaculation</label></div>
+            <div class="pill multi"><input type="checkbox" name="rep_diagnosis" id="rep8"><label for="rep8">None of the above</label></div>
+          </div>
+        </div>
+        <div class="q-block"><label class="q-label">Any reproductive surgeries?</label>
+          <div class="options-grid">
+            <div class="pill multi"><input type="checkbox" name="rep_surgery" id="rsurg1"><label for="rsurg1">Varicocele repair</label></div>
+            <div class="pill multi"><input type="checkbox" name="rep_surgery" id="rsurg2"><label for="rsurg2">Vasectomy</label></div>
+            <div class="pill multi"><input type="checkbox" name="rep_surgery" id="rsurg3"><label for="rsurg3">Vasectomy reversal</label></div>
+            <div class="pill multi"><input type="checkbox" name="rep_surgery" id="rsurg4"><label for="rsurg4">Testicular biopsy / TESA</label></div>
+            <div class="pill multi"><input type="checkbox" name="rep_surgery" id="rsurg5"><label for="rsurg5">Hernia repair (groin)</label></div>
+            <div class="pill multi"><input type="checkbox" name="rep_surgery" id="rsurg6"><label for="rsurg6">None</label></div>
+          </div>
+        </div>
+        <div class="q-block"><label class="q-label">Have you had any hormone tests done?</label>
+          <div class="options-grid">
+            <div class="pill multi"><input type="checkbox" name="hormone_tests" id="mht1"><label for="mht1">Testosterone</label></div>
+            <div class="pill multi"><input type="checkbox" name="hormone_tests" id="mht2"><label for="mht2">FSH / LH</label></div>
+            <div class="pill multi"><input type="checkbox" name="hormone_tests" id="mht3"><label for="mht3">Prolactin</label></div>
+            <div class="pill multi"><input type="checkbox" name="hormone_tests" id="mht4"><label for="mht4">Thyroid (TSH)</label></div>
+            <div class="pill multi"><input type="checkbox" name="hormone_tests" id="mht5"><label for="mht5">Genetic testing</label></div>
+            <div class="pill multi"><input type="checkbox" name="hormone_tests" id="mht6"><label for="mht6">No, not yet</label></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. General medical -->
+    <div class="section">
+      <div class="section-header" onclick="toggle(this)">
+        <div class="section-num">3</div>
+        <div class="section-title">General Medical History</div>
+        <div class="section-chevron open">▾</div>
+      </div>
+      <div class="section-body">
+        <div class="q-block"><label class="q-label">Do you have any of the following?</label>
+          <div class="options-grid">
+            <div class="pill multi"><input type="checkbox" name="medical" id="gmed1"><label for="gmed1">Diabetes / insulin resistance</label></div>
+            <div class="pill multi"><input type="checkbox" name="medical" id="gmed2"><label for="gmed2">High blood pressure</label></div>
+            <div class="pill multi"><input type="checkbox" name="medical" id="gmed3"><label for="gmed3">Thyroid disorder</label></div>
+            <div class="pill multi"><input type="checkbox" name="medical" id="gmed4"><label for="gmed4">Autoimmune condition</label></div>
+            <div class="pill multi"><input type="checkbox" name="medical" id="gmed5"><label for="gmed5">Coeliac disease</label></div>
+            <div class="pill multi"><input type="checkbox" name="medical" id="gmed6"><label for="gmed6">Mental health condition</label></div>
+            <div class="pill multi"><input type="checkbox" name="medical" id="gmed7"><label for="gmed7">Chronic illness</label></div>
+            <div class="pill multi"><input type="checkbox" name="medical" id="gmed8"><label for="gmed8">None of the above</label></div>
+          </div>
+        </div>
+        <div class="q-block"><label class="q-label">Any other medical conditions or past surgeries?</label>
+          <textarea name="other_medical" placeholder="Anything else we should know…"></textarea>
+        </div>
+        <div class="q-block"><label class="q-label">Current medications</label>
+          <p class="q-hint">Some medications affect sperm quality — include all prescriptions and over-the-counter</p>
+          <textarea name="medications" placeholder="e.g. antihypertensives, antidepressants, steroids…"></textarea>
+        </div>
+        <div class="q-block"><label class="q-label">Known allergies</label>
+          <input type="text" name="allergies" placeholder="Medications, foods, other…">
+        </div>
+        <div class="q-block"><label class="q-label">Any family history relevant to fertility?</label>
+          <p class="q-hint">e.g. genetic conditions, hormonal disorders in father / brothers</p>
+          <textarea name="family_history" placeholder="…"></textarea>
+        </div>
+      </div></div>
+
+    <!-- 4. Lifestyle -->
+    <div class="section">
+      <div class="section-header" onclick="toggle(this)">
+        <div class="section-num">4</div>
+        <div class="section-title">Lifestyle &amp; Daily Habits</div>
+        <div class="section-chevron open">▾</div>
+      </div>
+      <div class="section-body">
+        <div class="q-block"><label class="q-label">How would you describe your diet?</label>
+          <div class="options-grid">
+            <div class="pill multi"><input type="checkbox" name="diet" id="md1"><label for="md1">Balanced / whole foods</label></div>
+            <div class="pill multi"><input type="checkbox" name="diet" id="md2"><label for="md2">Mostly plant-based</label></div>
+            <div class="pill multi"><input type="checkbox" name="diet" id="md3"><label for="md3">High in processed / fast food</label></div>
+            <div class="pill multi"><input type="checkbox" name="diet" id="md4"><label for="md4">High protein / gym diet</label></div>
+            <div class="pill multi"><input type="checkbox" name="diet" id="md5"><label for="md5">No specific pattern</label></div>
+          </div>
+        </div>
+        <div class="q-block"><label class="q-label">How often do you exercise?</label>
+          <div class="options-grid">
+            <div class="pill"><input type="radio" name="exercise" id="mex1"><label for="mex1">Rarely / never</label></div>
+            <div class="pill"><input type="radio" name="exercise" id="mex2"><label for="mex2">1–2 times a week</label></div>
+            <div class="pill"><input type="radio" name="exercise" id="mex3"><label for="mex3">3–4 times a week</label></div>
+            <div class="pill"><input type="radio" name="exercise" id="mex4"><label for="mex4">5+ times a week</label></div>
+          </div>
+        </div>
+        <div class="q-block"><label class="q-label">Do you use a hot tub, sauna, or have heat exposure at work?</label>
+          <p class="q-hint">Heat affects sperm production — even regular laptop use on the lap</p>
+          <div class="options-grid cols-3">
+            <div class="pill"><input type="radio" name="heat" id="ht1"><label for="ht1">Yes, regularly</label></div>
+            <div class="pill"><input type="radio" name="heat" id="ht2"><label for="ht2">Occasionally</label></div>
+            <div class="pill"><input type="radio" name="heat" id="ht3"><label for="ht3">No</label></div>
+          </div>
+        </div>
+        <div class="q-block"><label class="q-label">Do you smoke?</label>
+          <div class="options-grid">
+            <div class="pill"><input type="radio" name="smoke" id="msmk1"><label for="msmk1">Non-smoker</label></div>
+            <div class="pill"><input type="radio" name="smoke" id="msmk2"><label for="msmk2">Occasional</label></div>
+            <div class="pill"><input type="radio" name="smoke" id="msmk3"><label for="msmk3">Regular smoker</label></div>
+            <div class="pill"><input type="radio" name="smoke" id="msmk4"><label for="msmk4">Recently quit</label></div>
+          </div>
+        </div>
+        <div class="q-block"><label class="q-label">Do you drink alcohol?</label>
+          <div class="options-grid">
+            <div class="pill"><input type="radio" name="alcohol" id="malc1"><label for="malc1">Never / rarely</label></div>
+            <div class="pill"><input type="radio" name="alcohol" id="malc2"><label for="malc2">Occasionally (social)</label></div>
+            <div class="pill"><input type="radio" name="alcohol" id="malc3"><label for="malc3">Weekly</label></div>
+            <div class="pill"><input type="radio" name="alcohol" id="malc4"><label for="malc4">Most days</label></div>
+          </div>
+        </div>
+        <div class="q-block"><label class="q-label">Do you use anabolic steroids or performance-enhancing substances?</label>
+          <p class="q-hint">These can significantly impact sperm production</p>
+          <div class="options-grid cols-3">
+            <div class="pill"><input type="radio" name="steroids" id="st1"><label for="st1">No</label></div>
+            <div class="pill"><input type="radio" name="steroids" id="st2"><label for="st2">Past use</label></div>
+            <div class="pill"><input type="radio" name="steroids" id="st3"><label for="st3">Currently using</label></div>
+          </div>
+        </div>
+        <div class="q-block"><label class="q-label">How many hours do you sleep per night?</label>
+          <div class="options-grid">
+            <div class="pill"><input type="radio" name="sleep" id="msl1"><label for="msl1">Less than 5 hours</label></div>
+            <div class="pill"><input type="radio" name="sleep" id="msl2"><label for="msl2">5–6 hours</label></div>
+            <div class="pill"><input type="radio" name="sleep" id="msl3"><label for="msl3">7–8 hours</label></div>
+            <div class="pill"><input type="radio" name="sleep" id="msl4"><label for="msl4">More than 9 hours</label></div>
+          </div>
+        </div>
+        <div class="q-block"><label class="q-label">How would you describe your stress levels?</label>
+          <div class="options-grid">
+            <div class="pill"><input type="radio" name="stress" id="mst1"><label for="mst1">Low — generally calm</label></div>
+            <div class="pill"><input type="radio" name="stress" id="mst2"><label for="mst2">Moderate — manageable</label></div>
+            <div class="pill"><input type="radio" name="stress" id="mst3"><label for="mst3">High — often overwhelmed</label></div>
+            <div class="pill"><input type="radio" name="stress" id="mst4"><label for="mst4">Very high — burnout</label></div>
+          </div>
+        </div>
+        <div class="q-block"><label class="q-label">Occupational exposures</label>
+          <p class="q-hint">These can impact sperm quality</p>
+          <div class="options-grid">
+            <div class="pill multi"><input type="checkbox" name="exposure" id="menv1"><label for="menv1">Pesticides / chemicals</label></div>
+            <div class="pill multi"><input type="checkbox" name="exposure" id="menv2"><label for="menv2">Heavy metals</label></div>
+            <div class="pill multi"><input type="checkbox" name="exposure" id="menv3"><label for="menv3">Radiation</label></div>
+            <div class="pill multi"><input type="checkbox" name="exposure" id="menv4"><label for="menv4">High heat environments</label></div>
+            <div class="pill multi"><input type="checkbox" name="exposure" id="menv5"><label for="menv5">Shift work / night shifts</label></div>
+            <div class="pill multi"><input type="checkbox" name="exposure" id="menv6"><label for="menv6">None of the above</label></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Supplements -->
+    <div class="section">
+      <div class="section-header" onclick="toggle(this)">
+        <div class="section-num">5</div>
+        <div class="section-title">Supplements &amp; Medications</div>
+        <div class="section-chevron open">▾</div>
+      </div>
+      <div class="section-body">
+        <div class="q-block"><label class="q-label">Current supplements</label>
+          <div class="options-grid">
+            <div class="pill multi"><input type="checkbox" name="supplements" id="msupp1"><label for="msupp1">Zinc</label></div>
+            <div class="pill multi"><input type="checkbox" name="supplements" id="msupp2"><label for="msupp2">CoQ10</label></div>
+            <div class="pill multi"><input type="checkbox" name="supplements" id="msupp3"><label for="msupp3">Vitamin D</label></div>
+            <div class="pill multi"><input type="checkbox" name="supplements" id="msupp4"><label for="msupp4">Omega-3</label></div>
+            <div class="pill multi"><input type="checkbox" name="supplements" id="msupp5"><label for="msupp5">Vitamin C / E</label></div>
+            <div class="pill multi"><input type="checkbox" name="supplements" id="msupp6"><label for="msupp6">Selenium</label></div>
+            <div class="pill multi"><input type="checkbox" name="supplements" id="msupp7"><label for="msupp7">Male fertility supplement</label></div>
+            <div class="pill multi"><input type="checkbox" name="supplements" id="msupp8"><label for="msupp8">None currently</label></div>
+          </div>
+        </div>
+        <div class="q-block"><label class="q-label">Any other supplements or medications?</label>
+          <textarea name="other_supplements" placeholder="List anything else you're taking…"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. Emotional -->
+    <div class="section">
+      <div class="section-header" onclick="toggle(this)">
+        <div class="section-num">6</div>
+        <div class="section-title">Your Experience of This Journey</div>
+        <div class="section-chevron open">▾</div>
+      </div>
+      <div class="section-body">
+        <div class="callout">The emotional weight of fertility challenges affects partners too — your feelings are just as valid. ❤️</div>
+        <div class="q-block"><label class="q-label">How are you feeling about this journey emotionally?</label>
+          <div class="options-grid">
+            <div class="pill multi"><input type="checkbox" name="emotional" id="fem1"><label for="fem1">Hopeful</label></div>
+            <div class="pill multi"><input type="checkbox" name="emotional" id="fem2"><label for="fem2">Anxious</label></div>
+            <div class="pill multi"><input type="checkbox" name="emotional" id="fem3"><label for="fem3">Frustrated</label></div>
+            <div class="pill multi"><input type="checkbox" name="emotional" id="fem4"><label for="fem4">Helpless / unsure how to help</label></div>
+            <div class="pill multi"><input type="checkbox" name="emotional" id="fem5"><label for="fem5">Grieving</label></div>
+            <div class="pill multi"><input type="checkbox" name="emotional" id="fem6"><label for="fem6">Mostly okay</label></div>
+          </div>
+        </div>
+        <div class="q-block"><label class="q-label">Is there anything you'd like me to know or be sensitive about?</label>
+          <textarea name="sensitive_notes" placeholder="Share anything that feels relevant…"></textarea>
+        </div>
+        <div class="q-block"><label class="q-label">What are you hoping to understand or improve from this consultation?</label>
+          <textarea name="goals" placeholder="…"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom reminder -->
+    <div class="reminder-box">
+      <h3>&#128276; One Last Reminder</h3>
+      <p>Please email your semen analysis and all medical reports to <span class="email">dr.mindfulfertility@gmail.com</span></p>
+      <p><span class="deadline">At least 48 hours before your consultation.</span></p>
+    </div>
+
+    <!-- How can I call you -->
+    <div class="section">
+      <div class="section-header" onclick="toggle(this)">
+        <div class="section-num">7</div>
+        <div class="section-title">Consultation Call Details</div>
+        <div class="section-chevron open">▾</div>
+      </div>
+      <div class="section-body">
+        <div class="q-block">
+          <label class="q-label">Our consultation will be via Google Meet.</label>
+          <p class="q-hint">I will send you a Google Meet link after booking is confirmed via Instagram DM.</p>
+          <input type="text" name="call_note" placeholder="Any notes about your availability or time zone? e.g. I am in Dubai (IST +1.5)">
+        </div>
+      </div>
+    </div>
+
+<div class="thankyou">
+      <h2>Thank you ❤️</h2>
+      <p>Your health and your role in this journey matter deeply. I will review everything carefully before we meet.</p>
+      <p class="sign">With care,<br>Dr. Anjitha, MBBS, MS (OBG)</p>
+      <p class="brand-tag">Mindful Fertility</p>
+    </div>
+
+    <button type="submit" class="submit-btn">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>
+      Send my health history ❤️
+    </button>
+  </form>
+
+  <div id="success-msg">
+    <h2>Received! ❤️</h2>
+    <p>Thank you for taking the time to share this. It will make our consultation much more meaningful and personalised.</p>
+    <p style="margin-top:10px;font-size:0.88rem;color:var(--muted);">Don't forget to email your reports to <strong>dr.mindfulfertility@gmail.com</strong> at least 48 hours before your appointment.</p>
+    <p style="margin-top:14px;font-family:'DM Serif Display',serif;font-style:italic;color:var(--purple);">I look forward to meeting you.</p>
+    <p style="margin-top:16px;font-weight:600;color:var(--purple);">— Dr. Anjitha &nbsp;|&nbsp; <span style="color:var(--pink);font-style:italic;">Mindful Fertility</span></p>
+  </div>
+</div>
+<script>
+  function toggle(h){
+    const ch=h.querySelector('.section-chevron'),b=h.nextElementSibling,open=ch.classList.contains('open');
+    if(open){b.style.display='none';ch.classList.remove('open')}
+    else{b.style.display='flex';ch.classList.add('open')}
+  }
+  function updateProgress(){
+    const inputs=document.querySelectorAll('input:not([type=radio]):not([type=checkbox]),textarea');
+    const radios=[...new Set([...document.querySelectorAll('input[type=radio]')].map(r=>r.name))];
+    let filled=0,total=inputs.length+radios.length;
+    inputs.forEach(i=>{if(i.value.trim())filled++});
+    radios.forEach(n=>{if(document.querySelector(`input[name="${n}"]:checked`))filled++});
+    document.getElementById('progress-bar').style.width=(filled/total*100)+'%';
+  }
+  document.getElementById('male-form').addEventListener('input',updateProgress);
+  document.getElementById('male-form').addEventListener('submit',async function(e){
+    e.preventDefault();
+    const form = e.target;
+    const data = new FormData(form);
+    try {
+      await fetch(form.action, {method:'POST', body:data, headers:{'Accept':'application/json'}});
+    } catch(err) {
+      console.error('Submission error:', err);
+    }
+    this.style.display='none';
+    document.getElementById('success-msg').style.display='block';
+    document.getElementById('progress-bar').style.width='100%';
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+</script>
+</body>
+</html>
