@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Free Fertility Guide — Mindful Fertility</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Nunito:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Nunito',sans-serif;background:#FAF4F8;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+  .card{background:#fff;border-radius:20px;padding:48px 36px;max-width:480px;width:100%;text-align:center;box-shadow:0 8px 40px rgba(61,31,110,0.08)}
+  .brand{font-family:'DM Serif Display',serif;font-size:1.1rem;color:#3D1F6E;margin-bottom:6px}
+  .brand span{color:#E0457B;font-style:italic}
+  .badge{display:inline-block;background:#F5E2EE;color:#E0457B;font-size:0.75rem;font-weight:600;padding:4px 14px;border-radius:20px;margin-bottom:24px;letter-spacing:0.04em}
+  h1{font-family:'DM Serif Display',serif;font-size:1.9rem;color:#3D1F6E;line-height:1.2;margin-bottom:10px}
+  .subtitle{font-family:'DM Serif Display',serif;font-style:italic;font-size:1.05rem;color:#E0457B;margin-bottom:20px}
+  .desc{font-size:0.9rem;color:#5A5A6A;line-height:1.7;margin-bottom:28px}
+  .benefits{text-align:left;background:#FAF4F8;border-radius:12px;padding:16px 20px;margin-bottom:28px}
+  .benefit{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;font-size:0.88rem;color:#4A4A5A;line-height:1.5}
+  .benefit:last-child{margin-bottom:0}
+  .dot{width:8px;height:8px;border-radius:50%;background:#E0457B;flex-shrink:0;margin-top:5px}
+  input{width:100%;padding:14px 16px;border:1.5px solid #E8C8D8;border-radius:10px;font-family:'Nunito',sans-serif;font-size:0.9rem;color:#4A4A5A;background:#FCF0F5;outline:none;margin-bottom:12px;-webkit-appearance:none}
+  input:focus{border-color:#E0457B;background:#fff}
+  button{width:100%;padding:16px;background:linear-gradient(135deg,#E0457B,#3D1F6E);color:#fff;border:none;border-radius:50px;font-family:'Nunito',sans-serif;font-size:1rem;font-weight:600;cursor:pointer;margin-bottom:12px}
+  button:active{opacity:0.9;transform:scale(0.98)}
+  .privacy{font-size:0.78rem;color:#9A8FA0;line-height:1.5}
+  #success{display:none;text-align:center}
+  #success h2{font-family:'DM Serif Display',serif;font-size:1.6rem;color:#3D1F6E;margin-bottom:12px}
+  #success p{font-size:0.9rem;color:#5A5A6A;line-height:1.7;margin-bottom:16px}
+  #success .guide-btn{display:inline-block;padding:14px 32px;background:linear-gradient(135deg,#E0457B,#3D1F6E);color:#fff;border-radius:50px;text-decoration:none;font-weight:600;font-size:0.95rem}
+  #success .sign{font-family:'DM Serif Display',serif;color:#3D1F6E;font-size:0.95rem;margin-top:20px}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="brand">Mindful Fertility <span>by Dr Anjitha</span></div>
+  <div class="badge">FREE GUIDE</div>
+
+  <h1>Understanding Your Fertility</h1>
+  <div class="subtitle">A guide before your consultation</div>
+
+  <p class="desc">A free, doctor-written guide to help you feel informed, calm and empowered — before we meet, or simply as a starting point on your journey.</p>
+
+  <div class="benefits">
+    <div class="benefit"><div class="dot"></div><span>Understand how fertility actually works</span></div>
+    <div class="benefit"><div class="dot"></div><span>Know the key factors that influence conception</span></div>
+    <div class="benefit"><div class="dot"></div><span>Discover how lifestyle supports or blocks fertility</span></div>
+    <div class="benefit"><div class="dot"></div><span>Prepare meaningful questions for your consultation</span></div>
+  </div>
+
+  <form id="gate-form" action="https://formspree.io/f/mzdlqkgz" method="POST">
+    <input type="text" name="name" placeholder="Your first name" required>
+    <input type="email" name="email" placeholder="Your email address" required>
+    <input type="hidden" name="_subject" value="New Free Guide Download — Mindful Fertility">
+    <input type="hidden" name="source" value="Free Guide Gate Page">
+    <button type="submit">Send me the free guide ❤️</button>
+  </form>
+
+  <p class="privacy">Your details are completely confidential and will never be shared. You may occasionally hear from Dr. Anjitha with helpful fertility information — you can unsubscribe anytime.</p>
+
+  <div id="success">
+    <h2>Here is your guide ❤️</h2>
+    <p>Thank you for downloading. I hope it helps you feel a little more informed and a little less alone on this journey.</p>
+    <a href="https://drive.google.com/file/d/1_uxXdrfn8MqP8Eyj4Tn0EGWa3cMQ7oIy/preview" class="guide-btn" target="_blank">Open your free guide</a>
+    <p class="sign">With care,<br>Dr. Anjitha | Mindful Fertility</p>
+  </div>
+</div>
+
+<script>
+  document.getElementById('gate-form').addEventListener('submit', async function(e){
+    e.preventDefault();
+    const form = e.target;
+    const data = new FormData(form);
+    try {
+      await fetch(form.action, {method:'POST', body:data, headers:{'Accept':'application/json'}});
+    } catch(err) {}
+    form.style.display = 'none';
+    document.querySelector('.benefits').style.display = 'none';
+    document.querySelector('.desc').style.display = 'none';
+    document.querySelector('.privacy').style.display = 'none';
+    document.getElementById('success').style.display = 'block';
+  });
+</script>
+</body>
+</html>
